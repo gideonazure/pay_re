@@ -45,13 +45,18 @@ class Reminders
     private $repeatable;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Payment::class, mappedBy="reminders")
+     * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="reminders")
      */
     private $payments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="reminders_recipients")
+     */
+    private $recipients;
+
     public function __construct()
     {
-        $this->payments = new ArrayCollection();
+        $this->recipients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -119,31 +124,47 @@ class Reminders
         return $this;
     }
 
-    /**
-     * @return Collection|Payment[]
-     */
-    public function getPayments(): Collection
+    public function getPayments(): ?Payment
     {
         return $this->payments;
     }
 
-    public function addPayment(Payment $payment): self
+    public function setPayments(?Payment $payments): self
     {
-        if (!$this->payments->contains($payment)) {
-            $this->payments[] = $payment;
-            $payment->addReminder($this);
+        $this->payments = $payments;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Users[]
+     */
+    public function getRecipients(): Collection
+    {
+        return $this->recipients;
+    }
+
+    public function addRecipient(Users $recipient): self
+    {
+        if (!$this->recipients->contains($recipient)) {
+            $this->recipients[] = $recipient;
+            $recipient->setRemindersRecipients($this);
         }
 
         return $this;
     }
 
-    public function removePayment(Payment $payment): self
+    public function removeRecipient(Users $recipient): self
     {
-        if ($this->payments->contains($payment)) {
-            $this->payments->removeElement($payment);
-            $payment->removeReminder($this);
+        if ($this->recipients->contains($recipient)) {
+            $this->recipients->removeElement($recipient);
+            // set the owning side to null (unless already changed)
+            if ($recipient->getRemindersRecipients() === $this) {
+                $recipient->setRemindersRecipients(null);
+            }
         }
 
         return $this;
     }
+
 }

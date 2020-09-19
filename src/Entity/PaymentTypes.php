@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PaymentTypesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,6 +35,11 @@ class PaymentTypes
     private $active;
 
     /**
+     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="type")
+     */
+    private $payment_type;
+
+    /**
      * @ORM\Column(type="datetime_immutable")
      */
     private $createdAt;
@@ -41,6 +48,11 @@ class PaymentTypes
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $updatedAt;
+
+    public function __construct()
+    {
+        $this->payment_type = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,4 +118,36 @@ class PaymentTypes
 
         return $this;
     }
+
+    /**
+     * @return Collection|Payment[]
+     */
+    public function getPaymentType(): Collection
+    {
+        return $this->payment_type;
+    }
+
+    public function addPaymentType(Payment $paymentType): self
+    {
+        if (!$this->payment_type->contains($paymentType)) {
+            $this->payment_type[] = $paymentType;
+            $paymentType->setType($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentType(Payment $paymentType): self
+    {
+        if ($this->payment_type->contains($paymentType)) {
+            $this->payment_type->removeElement($paymentType);
+            // set the owning side to null (unless already changed)
+            if ($paymentType->getType() === $this) {
+                $paymentType->setType(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

@@ -65,28 +65,33 @@ class Users
     private $position;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="responsible")
+     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="responsible")
      */
     private $payment_responsible;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Payment::class, mappedBy="supervisor")
+     * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="supervisor")
      */
     private $payment_supervisor;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="createdBy")
+     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="createdBy")
      */
     private $payment_created;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="updatedBy")
+     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="updatedBy")
      */
     private $payment_updated;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Reminders::class, inversedBy="recipients")
+     */
+    private $reminders_recipients;
+
     public function __construct()
     {
-        $this->payment_supervisor = new ArrayCollection();
+        $this->payment_responsible = new ArrayCollection();
         $this->payment_created = new ArrayCollection();
         $this->payment_updated = new ArrayCollection();
     }
@@ -204,42 +209,45 @@ class Users
         return $this;
     }
 
-    public function getPaymentResponsible(): ?Payment
+    /**
+     * @return Collection|Payment[]
+     */
+    public function getPaymentResponsible(): Collection
     {
         return $this->payment_responsible;
     }
 
-    public function setPaymentResponsible(?Payment $payment_responsible): self
+    public function addPaymentResponsible(Payment $paymentResponsible): self
     {
-        $this->payment_responsible = $payment_responsible;
+        if (!$this->payment_responsible->contains($paymentResponsible)) {
+            $this->payment_responsible[] = $paymentResponsible;
+            $paymentResponsible->setResponsible($this);
+        }
 
         return $this;
     }
 
-    /**
-     * @return Collection|Payment[]
-     */
-    public function getPaymentSupervisor(): Collection
+    public function removePaymentResponsible(Payment $paymentResponsible): self
+    {
+        if ($this->payment_responsible->contains($paymentResponsible)) {
+            $this->payment_responsible->removeElement($paymentResponsible);
+            // set the owning side to null (unless already changed)
+            if ($paymentResponsible->getResponsible() === $this) {
+                $paymentResponsible->setResponsible(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPaymentSupervisor(): ?Payment
     {
         return $this->payment_supervisor;
     }
 
-    public function addPaymentSupervisor(Payment $paymentSupervisor): self
+    public function setPaymentSupervisor(?Payment $payment_supervisor): self
     {
-        if (!$this->payment_supervisor->contains($paymentSupervisor)) {
-            $this->payment_supervisor[] = $paymentSupervisor;
-            $paymentSupervisor->addSupervisor($this);
-        }
-
-        return $this;
-    }
-
-    public function removePaymentsSupervisor(Payment $paymentsSupervisor): self
-    {
-        if ($this->payments_supervisor->contains($paymentsSupervisor)) {
-            $this->payments_supervisor->removeElement($paymentsSupervisor);
-            $paymentsSupervisor->removeSupervisor($this);
-        }
+        $this->payment_supervisor = $payment_supervisor;
 
         return $this;
     }
@@ -256,7 +264,7 @@ class Users
     {
         if (!$this->payment_created->contains($paymentCreated)) {
             $this->payment_created[] = $paymentCreated;
-            $paymentCreated->addCreatedBy($this);
+            $paymentCreated->setCreatedBy($this);
         }
 
         return $this;
@@ -266,7 +274,10 @@ class Users
     {
         if ($this->payment_created->contains($paymentCreated)) {
             $this->payment_created->removeElement($paymentCreated);
-            $paymentCreated->removeCreatedBy($this);
+            // set the owning side to null (unless already changed)
+            if ($paymentCreated->getCreatedBy() === $this) {
+                $paymentCreated->setCreatedBy(null);
+            }
         }
 
         return $this;
@@ -284,7 +295,7 @@ class Users
     {
         if (!$this->payment_updated->contains($paymentUpdated)) {
             $this->payment_updated[] = $paymentUpdated;
-            $paymentUpdated->addUpdatedBy($this);
+            $paymentUpdated->setUpdatedBy($this);
         }
 
         return $this;
@@ -294,33 +305,25 @@ class Users
     {
         if ($this->payment_updated->contains($paymentUpdated)) {
             $this->payment_updated->removeElement($paymentUpdated);
-            $paymentUpdated->removeUpdatedBy($this);
+            // set the owning side to null (unless already changed)
+            if ($paymentUpdated->getUpdatedBy() === $this) {
+                $paymentUpdated->setUpdatedBy(null);
+            }
         }
 
         return $this;
     }
 
-    public function removePaymentSupervisor(Payment $paymentSupervisor): self
+    public function getRemindersRecipients(): ?Reminders
     {
-        if ($this->payment_supervisor->contains($paymentSupervisor)) {
-            $this->payment_supervisor->removeElement($paymentSupervisor);
-            $paymentSupervisor->removeSupervisor($this);
-        }
+        return $this->reminders_recipients;
+    }
+
+    public function setRemindersRecipients(?Reminders $reminders_recipients): self
+    {
+        $this->reminders_recipients = $reminders_recipients;
 
         return $this;
     }
 
-    public function setPaymentCreated(?Payment $payment_created): self
-    {
-        $this->payment_created = $payment_created;
-
-        return $this;
-    }
-
-    public function setPaymentUpdated(?Payment $payment_updated): self
-    {
-        $this->payment_updated = $payment_updated;
-
-        return $this;
-    }
 }

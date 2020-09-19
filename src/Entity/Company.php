@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CompanyRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -53,6 +55,17 @@ class Company
     private $code;
 
     /**
+     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="payer")
+     */
+    private $payment_payer;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="recipient")
+     */
+    private $payment_recipient;
+
+
+    /**
      * @ORM\Column(type="datetime_immutable")
      */
     private $createdAt;
@@ -66,6 +79,12 @@ class Company
      * @ORM\Column(type="boolean")
      */
     private $active;
+
+    public function __construct()
+    {
+        $this->payment_payer = new ArrayCollection();
+        $this->payment_recipient = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -191,4 +210,68 @@ class Company
 
         return $this;
     }
+
+    /**
+     * @return Collection|Payment[]
+     */
+    public function getPaymentPayer(): Collection
+    {
+        return $this->payment_payer;
+    }
+
+    public function addPaymentPayer(Payment $paymentPayer): self
+    {
+        if (!$this->payment_payer->contains($paymentPayer)) {
+            $this->payment_payer[] = $paymentPayer;
+            $paymentPayer->setPayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentPayer(Payment $paymentPayer): self
+    {
+        if ($this->payment_payer->contains($paymentPayer)) {
+            $this->payment_payer->removeElement($paymentPayer);
+            // set the owning side to null (unless already changed)
+            if ($paymentPayer->getPayer() === $this) {
+                $paymentPayer->setPayer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Payment[]
+     */
+    public function getPaymentRecipient(): Collection
+    {
+        return $this->payment_recipient;
+    }
+
+    public function addPaymentRecipient(Payment $paymentRecipient): self
+    {
+        if (!$this->payment_recipient->contains($paymentRecipient)) {
+            $this->payment_recipient[] = $paymentRecipient;
+            $paymentRecipient->setRecipient($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentRecipient(Payment $paymentRecipient): self
+    {
+        if ($this->payment_recipient->contains($paymentRecipient)) {
+            $this->payment_recipient->removeElement($paymentRecipient);
+            // set the owning side to null (unless already changed)
+            if ($paymentRecipient->getRecipient() === $this) {
+                $paymentRecipient->setRecipient(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

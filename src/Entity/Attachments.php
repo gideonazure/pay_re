@@ -28,9 +28,9 @@ class Attachments
     private $path;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="attachment")
      */
-    private $payment;
+    private $payment_attachment;
 
     public function getId(): ?int
     {
@@ -61,15 +61,17 @@ class Attachments
         return $this;
     }
 
-    public function getPayment(): ?int
+    public function getPaymentAttachment(): ?Payment
     {
-        return $this->payment;
+        return $this->payment_attachment;
     }
 
-    public function setPayment(int $payment): self
+    public function setPaymentAttachment(?Payment $payment_attachment): self
     {
-        $this->payment = $payment;
+        $this->payment_attachment = $payment_attachment;
 
         return $this;
     }
+
+
 }

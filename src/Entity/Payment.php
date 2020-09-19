@@ -30,18 +30,17 @@ class Payment
     private $description;
 
     /**
-     * @ORM\OneToOne(targetEntity=PaymentTypes::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=PaymentTypes::class, inversedBy="payment_type")
      */
     private $type;
 
     /**
-     * @ORM\OneToOne(targetEntity=Company::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="payment_payer")
      */
     private $payer;
 
     /**
-     * @ORM\OneToOne(targetEntity=Company::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="paymnet_recipient")
      */
     private $recipient;
 
@@ -76,19 +75,24 @@ class Payment
     private $status;
 
     /**
-     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="payment_responsible")
+     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="payment_responsible")
      */
     private $responsible;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Users::class, inversedBy="payment_supervisor")
+     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="payment_supervisor")
      */
     private $supervisor;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Reminders::class, inversedBy="payments")
+     * @ORM\OneToMany(targetEntity=Reminders::class, mappedBy="payments")
      */
     private $reminders;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Attachments::class, mappedBy="payment_attachment")
+     */
+    private $attachments;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -96,7 +100,7 @@ class Payment
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="payment_created")
+     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="payment_created")
      */
     private $createdBy;
 
@@ -106,17 +110,15 @@ class Payment
     private $updatesAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="payment_updated")
+     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="payment_updated")
      */
     private $updatedBy;
 
     public function __construct()
     {
-        $this->responsible = new ArrayCollection();
         $this->supervisor = new ArrayCollection();
         $this->reminders = new ArrayCollection();
-        $this->createdBy = new ArrayCollection();
-        $this->updatedBy = new ArrayCollection();
+        $this->attachments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -144,42 +146,6 @@ class Payment
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getType(): ?PaymentTypes
-    {
-        return $this->type;
-    }
-
-    public function setType(PaymentTypes $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function getPayer(): ?Company
-    {
-        return $this-payer;
-    }
-
-    public function setPayer(?Company $payer): self
-    {
-        $this->payer = $payer;
-
-        return $this;
-    }
-
-    public function getRecipient(): ?Company
-    {
-        return $this->recipient;
-    }
-
-    public function setRecipient(?Company $recipient): self
-    {
-        $this->recipient = $recipient;
 
         return $this;
     }
@@ -256,33 +222,74 @@ class Payment
         return $this;
     }
 
-    /**
-     * @return Collection|Users[]
-     */
-    public function getResponsible(): Collection
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->responsible;
+        return $this->createdAt;
     }
 
-    public function addResponsible(Users $responsible): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        if (!$this->responsible->contains($responsible)) {
-            $this->responsible[] = $responsible;
-            $responsible->setPayment($this);
-        }
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function removeResponsible(Users $responsible): self
+    public function getUpdatesAt(): ?\DateTimeImmutable
     {
-        if ($this->responsible->contains($responsible)) {
-            $this->responsible->removeElement($responsible);
-            // set the owning side to null (unless already changed)
-            if ($responsible->getPayment() === $this) {
-                $responsible->setPayment(null);
-            }
-        }
+        return $this->updatesAt;
+    }
+
+    public function setUpdatesAt(?\DateTimeImmutable $updatesAt): self
+    {
+        $this->updatesAt = $updatesAt;
+
+        return $this;
+    }
+
+    public function getType(): ?PaymentTypes
+    {
+        return $this->type;
+    }
+
+    public function setType(?PaymentTypes $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getPayer(): ?Company
+    {
+        return $this->payer;
+    }
+
+    public function setPayer(?Company $payer): self
+    {
+        $this->payer = $payer;
+
+        return $this;
+    }
+
+    public function getRecipient(): ?Company
+    {
+        return $this->recipient;
+    }
+
+    public function setRecipient(?Company $recipient): self
+    {
+        $this->recipient = $recipient;
+
+        return $this;
+    }
+
+    public function getResponsible(): ?Users
+    {
+        return $this->responsible;
+    }
+
+    public function setResponsible(?Users $responsible): self
+    {
+        $this->responsible = $responsible;
 
         return $this;
     }
@@ -299,6 +306,7 @@ class Payment
     {
         if (!$this->supervisor->contains($supervisor)) {
             $this->supervisor[] = $supervisor;
+            $supervisor->setPaymentSupervisor($this);
         }
 
         return $this;
@@ -308,6 +316,10 @@ class Payment
     {
         if ($this->supervisor->contains($supervisor)) {
             $this->supervisor->removeElement($supervisor);
+            // set the owning side to null (unless already changed)
+            if ($supervisor->getPaymentSupervisor() === $this) {
+                $supervisor->setPaymentSupervisor(null);
+            }
         }
 
         return $this;
@@ -325,6 +337,7 @@ class Payment
     {
         if (!$this->reminders->contains($reminder)) {
             $this->reminders[] = $reminder;
+            $reminder->setPayments($this);
         }
 
         return $this;
@@ -334,84 +347,68 @@ class Payment
     {
         if ($this->reminders->contains($reminder)) {
             $this->reminders->removeElement($reminder);
+            // set the owning side to null (unless already changed)
+            if ($reminder->getPayments() === $this) {
+                $reminder->setPayments(null);
+            }
         }
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    /**
+     * @return Collection|Attachments[]
+     */
+    public function getAttachments(): Collection
     {
-        return $this->createdAt;
+        return $this->attachments;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function addAttachment(Attachments $attachment): self
     {
-        $this->createdAt = $createdAt;
+        if (!$this->attachments->contains($attachment)) {
+            $this->attachments[] = $attachment;
+            $attachment->setPaymentAttachment($this);
+        }
 
         return $this;
     }
 
-    /**
-     * @return Collection|Users[]
-     */
-    public function getCreatedBy(): Collection
+    public function removeAttachment(Attachments $attachment): self
+    {
+        if ($this->attachments->contains($attachment)) {
+            $this->attachments->removeElement($attachment);
+            // set the owning side to null (unless already changed)
+            if ($attachment->getPaymentAttachment() === $this) {
+                $attachment->setPaymentAttachment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?Users
     {
         return $this->createdBy;
     }
 
-    public function addCreatedBy(Users $createdBy): self
+    public function setCreatedBy(?Users $createdBy): self
     {
-        if (!$this->createdBy->contains($createdBy)) {
-            $this->createdBy[] = $createdBy;
-        }
+        $this->createdBy = $createdBy;
 
         return $this;
     }
 
-    public function removeCreatedBy(Users $createdBy): self
-    {
-        if ($this->createdBy->contains($createdBy)) {
-            $this->createdBy->removeElement($createdBy);
-        }
-
-        return $this;
-    }
-
-    public function getUpdatesAt(): ?\DateTimeImmutable
-    {
-        return $this->updatesAt;
-    }
-
-    public function setUpdatesAt(?\DateTimeImmutable $updatesAt): self
-    {
-        $this->updatesAt = $updatesAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Users[]
-     */
-    public function getUpdatedBy(): Collection
+    public function getUpdatedBy(): ?Users
     {
         return $this->updatedBy;
     }
 
-    public function addUpdatedBy(Users $updatedBy): self
+    public function setUpdatedBy(?Users $updatedBy): self
     {
-        if (!$this->updatedBy->contains($updatedBy)) {
-            $this->updatedBy[] = $updatedBy;
-        }
+        $this->updatedBy = $updatedBy;
 
         return $this;
     }
 
-    public function removeUpdatedBy(Users $updatedBy): self
-    {
-        if ($this->updatedBy->contains($updatedBy)) {
-            $this->updatedBy->removeElement($updatedBy);
-        }
-
-        return $this;
-    }
 }
