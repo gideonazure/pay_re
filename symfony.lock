@@ -123,6 +123,9 @@
     "gedmo/doctrine-extensions": {
         "version": "v2.4.42"
     },
+    "gesdinet/jwt-refresh-token-bundle": {
+        "version": "v0.9.1"
+    },
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
@@ -131,6 +134,27 @@
     },
     "laminas/laminas-zendframework-bridge": {
         "version": "1.1.1"
+    },
+    "lcobucci/jwt": {
+        "version": "3.3.3"
+    },
+    "league/fractal": {
+        "version": "0.19.2"
+    },
+    "lexik/jwt-authentication-bundle": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "5b2157bcd5778166a5696e42f552ad36529a07a6"
+        },
+        "files": [
+            "config/packages/lexik_jwt_authentication.yaml"
+        ]
+    },
+    "namshi/jose": {
+        "version": "7.2.3"
     },
     "nikic/php-parser": {
         "version": "v4.9.1"
@@ -286,6 +310,12 @@
     "symfony/process": {
         "version": "v5.1.5"
     },
+    "symfony/property-access": {
+        "version": "v5.1.5"
+    },
+    "symfony/property-info": {
+        "version": "v5.1.5"
+    },
     "symfony/routing": {
         "version": "5.1",
         "recipe": {
@@ -299,6 +329,30 @@
             "config/packages/routing.yaml",
             "config/routes.yaml"
         ]
+    },
+    "symfony/security-bundle": {
+        "version": "5.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.1",
+            "ref": "0a4bae19389d3b9cba1ca0102e3b2bccea724603"
+        },
+        "files": [
+            "config/packages/security.yaml"
+        ]
+    },
+    "symfony/security-core": {
+        "version": "v5.1.5"
+    },
+    "symfony/security-csrf": {
+        "version": "v5.1.5"
+    },
+    "symfony/security-guard": {
+        "version": "v5.1.5"
+    },
+    "symfony/security-http": {
+        "version": "v5.1.5"
     },
     "symfony/service-contracts": {
         "version": "v2.2.0"
@@ -327,6 +381,19 @@
             "config/packages/test/twig.yaml",
             "config/packages/twig.yaml",
             "templates/base.html.twig"
+        ]
+    },
+    "symfony/validator": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "d902da3e4952f18d3bf05aab29512eb61cabd869"
+        },
+        "files": [
+            "config/packages/test/validator.yaml",
+            "config/packages/validator.yaml"
         ]
     },
     "symfony/var-dumper": {

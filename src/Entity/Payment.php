@@ -40,7 +40,7 @@ class Payment
     private $payer;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="paymnet_recipient")
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="payment_recipient")
      */
     private $recipient;
 
@@ -75,12 +75,12 @@ class Payment
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="payment_responsible")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="payment_responsible")
      */
     private $responsible;
 
     /**
-     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="payment_supervisor")
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="payment_supervisor")
      */
     private $supervisor;
 
@@ -100,7 +100,7 @@ class Payment
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="payment_created")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="payment_created")
      */
     private $createdBy;
 
@@ -110,7 +110,7 @@ class Payment
     private $updatesAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="payment_updated")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="payment_updated")
      */
     private $updatedBy;
 
@@ -282,12 +282,12 @@ class Payment
         return $this;
     }
 
-    public function getResponsible(): ?Users
+    public function getResponsible(): ?User
     {
         return $this->responsible;
     }
 
-    public function setResponsible(?Users $responsible): self
+    public function setResponsible(?User $responsible): self
     {
         $this->responsible = $responsible;
 
@@ -295,14 +295,14 @@ class Payment
     }
 
     /**
-     * @return Collection|Users[]
+     * @return Collection|User[]
      */
     public function getSupervisor(): Collection
     {
         return $this->supervisor;
     }
 
-    public function addSupervisor(Users $supervisor): self
+    public function addSupervisor(User $supervisor): self
     {
         if (!$this->supervisor->contains($supervisor)) {
             $this->supervisor[] = $supervisor;
@@ -312,7 +312,7 @@ class Payment
         return $this;
     }
 
-    public function removeSupervisor(Users $supervisor): self
+    public function removeSupervisor(User $supervisor): self
     {
         if ($this->supervisor->contains($supervisor)) {
             $this->supervisor->removeElement($supervisor);
@@ -387,24 +387,24 @@ class Payment
         return $this;
     }
 
-    public function getCreatedBy(): ?Users
+    public function getCreatedBy(): ?User
     {
         return $this->createdBy;
     }
 
-    public function setCreatedBy(?Users $createdBy): self
+    public function setCreatedBy(?User $createdBy): self
     {
         $this->createdBy = $createdBy;
 
         return $this;
     }
 
-    public function getUpdatedBy(): ?Users
+    public function getUpdatedBy(): ?User
     {
         return $this->updatedBy;
     }
 
-    public function setUpdatedBy(?Users $updatedBy): self
+    public function setUpdatedBy(?User $updatedBy): self
     {
         $this->updatedBy = $updatedBy;
 

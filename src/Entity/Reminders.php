@@ -50,7 +50,7 @@ class Reminders
     private $payments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Users::class, mappedBy="reminders_recipients")
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="reminders_recipients")
      */
     private $recipients;
 
@@ -137,14 +137,14 @@ class Reminders
     }
 
     /**
-     * @return Collection|Users[]
+     * @return Collection|User[]
      */
     public function getRecipients(): Collection
     {
         return $this->recipients;
     }
 
-    public function addRecipient(Users $recipient): self
+    public function addRecipient(User $recipient): self
     {
         if (!$this->recipients->contains($recipient)) {
             $this->recipients[] = $recipient;
@@ -154,7 +154,7 @@ class Reminders
         return $this;
     }
 
-    public function removeRecipient(Users $recipient): self
+    public function removeRecipient(User $recipient): self
     {
         if ($this->recipients->contains($recipient)) {
             $this->recipients->removeElement($recipient);

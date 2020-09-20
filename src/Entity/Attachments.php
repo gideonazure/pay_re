@@ -28,7 +28,7 @@ class Attachments
     private $path;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="attachment")
+     * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="attachments")
      */
     private $payment_attachment;
 
