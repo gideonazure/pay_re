@@ -19,7 +19,6 @@ final class AttachmentsService implements AttachmentsInterface
         return $this->attachmentsRepository->getById($id);
     }
 
-
     public function getList(): array
     {
         return $this->attachmentsRepository->getList();

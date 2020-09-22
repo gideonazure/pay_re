@@ -19,11 +19,6 @@ final class RemindersService implements RemindersInterface
         return $this->remindersRepository->getById($id);
     }
 
-    public function getByLogin(string $login): Reminders
-    {
-        return $this->remindersRepository->getByLogin($login);
-    }
-
     public function getList(): array
     {
         return $this->remindersRepository->getList();

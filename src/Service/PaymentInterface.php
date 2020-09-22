@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\User;
+use App\Entity\Payment;
 
-interface UserInterface
+interface PaymentInterface
 {
-    public function getById(int $id): User;
+    public function getById(int $id): Payment;
     public function getList(): array;
 }

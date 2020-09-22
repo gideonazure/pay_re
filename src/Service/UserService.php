@@ -19,11 +19,6 @@ final class UserService implements UserInterface
         return $this->userRepository->getById($id);
     }
 
-    public function getByLogin(string $login): User
-    {
-        return $this->userRepository->getByLogin($login);
-    }
-
     public function getList(): array
     {
         return $this->userRepository->getList();

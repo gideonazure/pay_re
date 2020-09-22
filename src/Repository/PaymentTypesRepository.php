@@ -19,32 +19,16 @@ class PaymentTypesRepository extends ServiceEntityRepository
         parent::__construct($registry, PaymentTypes::class);
     }
 
-    // /**
-    //  * @return PaymentTypes[] Returns an array of PaymentTypes objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getById(int $id): PaymentTypes
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->findOneBy(['id' => $id]);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?PaymentTypes
+    /**
+     * @return PaymentTypes[]|array
+     */
+    public function getList(): array
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->findAll();
     }
-    */
 }

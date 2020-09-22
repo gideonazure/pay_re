@@ -19,32 +19,16 @@ class AttachmentsRepository extends ServiceEntityRepository
         parent::__construct($registry, Attachments::class);
     }
 
-    // /**
-    //  * @return Attachments[] Returns an array of Attachments objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getById(int $id): Attachments
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->findOneBy(['id' => $id]);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Attachments
+    /**
+     * @return Attachments[]|array
+     */
+    public function getList(): array
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->findAll();
     }
-    */
 }

@@ -19,32 +19,16 @@ class RemindersRepository extends ServiceEntityRepository
         parent::__construct($registry, Reminders::class);
     }
 
-    // /**
-    //  * @return Reminders[] Returns an array of Reminders objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getById(int $id): Reminders
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->findOneBy(['id' => $id]);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Reminders
+    /**
+     * @return Reminders[]|array
+     */
+    public function getList(): array
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->findAll();
     }
-    */
 }

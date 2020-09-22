@@ -19,11 +19,6 @@ final class PaymentTypesService implements PaymentTypesInterface
         return $this->paymentTypesRepository->getById($id);
     }
 
-    public function getByLogin(string $login): PaymentTypes
-    {
-        return $this->paymentTypesRepository->getByLogin($login);
-    }
-
     public function getList(): array
     {
         return $this->paymentTypesRepository->getList();

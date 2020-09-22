@@ -19,11 +19,6 @@ final class CompanyService implements CompanyInterface
         return $this->companyRepository->getById($id);
     }
 
-    public function getByLogin(string $login): Company
-    {
-        return $this->companyRepository->getByLogin($login);
-    }
-
     public function getList(): array
     {
         return $this->companyRepository->getList();

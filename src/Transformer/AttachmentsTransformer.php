@@ -11,11 +11,8 @@ final class AttachmentsTransformer extends TransformerAbstract
     {
         return [
             'name' => $attachments->getName(),
-            'surname' => $attachments->getSurname(),
-            'position' => $attachments->getPosition(),
-            'email' => $attachments->getEmail(),
-            'phone' => $attachments->getPhone(),
-            'telegram' => $attachments->getTelegram(),
+            'path' => $attachments->getPath(),
+            'payments' => $attachments->getPaymentAttachment(),
         ];
     }
 }

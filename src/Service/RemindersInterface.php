@@ -9,6 +9,5 @@ use App\Entity\Reminders;
 interface RemindersInterface
 {
     public function getById(int $id): Reminders;
-    public function getByLogin(string $login): Reminders;
     public function getList(): array;
 }
