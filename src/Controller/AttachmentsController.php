@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Service\UserInterface;
-use App\Transformer\UserTransformer;
+use App\Service\AttachmentsInterface;
+use App\Transformer\AttachmentsTransformer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -12,16 +12,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/user")
+ * @Route("/attachments")
  */
-final class UserController extends AbstractController
+final class AttachmentsController extends AbstractController
 {
-    private UserInterface $userInterface;
+    private AttachmentsInterface $attachmentsInterface;
     private Manager $fractal;
 
-    public function __construct(UserInterface $userInterface)
+    public function __construct(AttachmentsInterface $attachmentsInterface)
     {
-        $this->userInterface = $userInterface;
+        $this->attachmentsInterface = $attachmentsInterface;
         $this->fractal = new Manager();
     }
 
@@ -30,19 +30,20 @@ final class UserController extends AbstractController
      */
     public function getById(int $id): JsonResponse
     {
-        $user = $this->userInterface->getById($id);
-        $resourse = new Item($user, new UserTransformer());
+        $attachments = $this->attachmentsInterface->getById($id);
+        $resourse = new Item($attachments, new AttachmentsTransformer());
 
         return new JsonResponse($this->fractal->createData($resourse));
     }
+
 
     /**
      * @Route("/", methods={"GET"})
      */
     public function list(): JsonResponse
     {
-        $user = $this->userInterface->getList();
-        $resourse = new Collection($user, new UserTransformer());
+        $attachments = $this->attachmentsInterface->getList();
+        $resourse = new Collection($attachments, new AttachmentsTransformer());
         return new JsonResponse($this->fractal->createData($resourse));
     }
 }

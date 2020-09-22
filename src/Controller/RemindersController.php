@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Service\UserInterface;
-use App\Transformer\UserTransformer;
+use App\Service\RemindersInterface;
+use App\Transformer\RemindersTransformer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -12,16 +12,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/user")
+ * @Route("/reminders")
  */
-final class UserController extends AbstractController
+final class RemindersController extends AbstractController
 {
-    private UserInterface $userInterface;
+    private RemindersInterface $remindersInterface;
     private Manager $fractal;
 
-    public function __construct(UserInterface $userInterface)
+    public function __construct(RemindersInterface $remindersInterface)
     {
-        $this->userInterface = $userInterface;
+        $this->remindersInterface = $remindersInterface;
         $this->fractal = new Manager();
     }
 
@@ -30,19 +30,20 @@ final class UserController extends AbstractController
      */
     public function getById(int $id): JsonResponse
     {
-        $user = $this->userInterface->getById($id);
-        $resourse = new Item($user, new UserTransformer());
+        $reminders = $this->remindersInterface->getById($id);
+        $resourse = new Item($reminders, new RemindersTransformer());
 
         return new JsonResponse($this->fractal->createData($resourse));
     }
+
 
     /**
      * @Route("/", methods={"GET"})
      */
     public function list(): JsonResponse
     {
-        $user = $this->userInterface->getList();
-        $resourse = new Collection($user, new UserTransformer());
+        $reminders = $this->remindersInterface->getList();
+        $resourse = new Collection($reminders, new RemindersTransformer());
         return new JsonResponse($this->fractal->createData($resourse));
     }
 }

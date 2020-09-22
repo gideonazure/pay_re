@@ -37,7 +37,7 @@ class PaymentTypes
     /**
      * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="type")
      */
-    private $payment_type;
+    private $payments;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -51,7 +51,7 @@ class PaymentTypes
 
     public function __construct()
     {
-        $this->payment_type = new ArrayCollection();
+        $this->payments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -122,28 +122,28 @@ class PaymentTypes
     /**
      * @return Collection|Payment[]
      */
-    public function getPaymentType(): Collection
+    public function getPayment(): Collection
     {
-        return $this->payment_type;
+        return $this->payments;
     }
 
-    public function addPaymentType(Payment $paymentType): self
+    public function addPayment(Payment $payments): self
     {
-        if (!$this->payment_type->contains($paymentType)) {
-            $this->payment_type[] = $paymentType;
-            $paymentType->setType($this);
+        if (!$this->payments->contains($payments)) {
+            $this->payments[] = $payments;
+            $payments->setType($this);
         }
 
         return $this;
     }
 
-    public function removePaymentType(Payment $paymentType): self
+    public function removePayment(Payment $payments): self
     {
-        if ($this->payment_type->contains($paymentType)) {
-            $this->payment_type->removeElement($paymentType);
+        if ($this->payments->contains($payments)) {
+            $this->payments->removeElement($payments);
             // set the owning side to null (unless already changed)
-            if ($paymentType->getType() === $this) {
-                $paymentType->setType(null);
+            if ($payments->getType() === $this) {
+                $payments->setType(null);
             }
         }
 

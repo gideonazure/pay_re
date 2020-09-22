@@ -30,7 +30,7 @@ class Payment
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity=PaymentTypes::class, inversedBy="payment_type")
+     * @ORM\ManyToOne(targetEntity=PaymentTypes::class, inversedBy="payments")
      */
     private $type;
 

@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Service\UserInterface;
-use App\Transformer\UserTransformer;
+use App\Service\CompanyInterface;
+use App\Transformer\CompanyTransformer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -12,16 +12,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/user")
+ * @Route("/company")
  */
-final class UserController extends AbstractController
+final class CompanyController extends AbstractController
 {
-    private UserInterface $userInterface;
+    private CompanyInterface $companyInterface;
     private Manager $fractal;
 
-    public function __construct(UserInterface $userInterface)
+    public function __construct(CompanyInterface $companyInterface)
     {
-        $this->userInterface = $userInterface;
+        $this->companyInterface = $companyInterface;
         $this->fractal = new Manager();
     }
 
@@ -30,8 +30,8 @@ final class UserController extends AbstractController
      */
     public function getById(int $id): JsonResponse
     {
-        $user = $this->userInterface->getById($id);
-        $resourse = new Item($user, new UserTransformer());
+        $company = $this->companyInterface->getById($id);
+        $resourse = new Item($company, new CompanyTransformer());
 
         return new JsonResponse($this->fractal->createData($resourse));
     }
@@ -41,8 +41,8 @@ final class UserController extends AbstractController
      */
     public function list(): JsonResponse
     {
-        $user = $this->userInterface->getList();
-        $resourse = new Collection($user, new UserTransformer());
+        $company = $this->companyInterface->getList();
+        $resourse = new Collection($company, new CompanyTransformer());
         return new JsonResponse($this->fractal->createData($resourse));
     }
 }

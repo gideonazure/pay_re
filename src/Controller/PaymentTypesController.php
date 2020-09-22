@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Service\UserInterface;
-use App\Transformer\UserTransformer;
+use App\Service\PaymentTypesInterface;
+use App\Transformer\PaymentTypesTransformer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -12,16 +12,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/user")
+ * @Route("/paymentTypes")
  */
-final class UserController extends AbstractController
+final class PaymentTypesController extends AbstractController
 {
-    private UserInterface $userInterface;
+    private PaymentTypesInterface $paymentTypesInterface;
     private Manager $fractal;
 
-    public function __construct(UserInterface $userInterface)
+    public function __construct(PaymentTypesInterface $paymentTypesInterface)
     {
-        $this->userInterface = $userInterface;
+        $this->paymentTypesInterface = $paymentTypesInterface;
         $this->fractal = new Manager();
     }
 
@@ -30,8 +30,8 @@ final class UserController extends AbstractController
      */
     public function getById(int $id): JsonResponse
     {
-        $user = $this->userInterface->getById($id);
-        $resourse = new Item($user, new UserTransformer());
+        $paymentTypes = $this->paymentTypesInterface->getById($id);
+        $resourse = new Item($paymentTypes, new PaymentTypesTransformer());
 
         return new JsonResponse($this->fractal->createData($resourse));
     }
@@ -41,8 +41,9 @@ final class UserController extends AbstractController
      */
     public function list(): JsonResponse
     {
-        $user = $this->userInterface->getList();
-        $resourse = new Collection($user, new UserTransformer());
+        $paymentTypes = $this->paymentTypesInterface->getList();
+        $resourse = new Collection($paymentTypes, new PaymentTypesTransformer());
+
         return new JsonResponse($this->fractal->createData($resourse));
     }
 }
