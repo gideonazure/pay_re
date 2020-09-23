@@ -64,7 +64,6 @@ class Company
      */
     private $payment_recipient;
 
-
     /**
      * @ORM\Column(type="datetime_immutable")
      */
@@ -275,6 +274,4 @@ class Company
 
         return $this;
     }
-
-
 }

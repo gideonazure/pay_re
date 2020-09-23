@@ -44,6 +44,7 @@ class PaymentTypesFixtures extends AbstractFixture
     private function createPaymentType(array $type): PaymentTypes
     {
         $paymentTypes = new PaymentTypes($type['abbr']);
+
         return $paymentTypes
             ->setDescription($type['description'])
             ->setActive($this->faker->boolean(90));

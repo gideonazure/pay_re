@@ -19,4 +19,3 @@ final class RemindersTransformer extends TransformerAbstract
         ];
     }
 }
-

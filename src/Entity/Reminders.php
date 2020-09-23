@@ -177,5 +177,4 @@ class Reminders
 
         return $this;
     }
-
 }

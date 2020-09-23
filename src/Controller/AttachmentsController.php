@@ -36,7 +36,6 @@ final class AttachmentsController extends AbstractController
         return new JsonResponse($this->fractal->createData($resourse));
     }
 
-
     /**
      * @Route("/", methods={"GET"})
      */
@@ -44,6 +43,7 @@ final class AttachmentsController extends AbstractController
     {
         $attachments = $this->attachmentsInterface->getList();
         $resourse = new Collection($attachments, new AttachmentsTransformer());
+
         return new JsonResponse($this->fractal->createData($resourse));
     }
 }

@@ -9,5 +9,6 @@ use App\Entity\Attachments;
 interface AttachmentsInterface
 {
     public function getById(int $id): Attachments;
+
     public function getList(): array;
 }

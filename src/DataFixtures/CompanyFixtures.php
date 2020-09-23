@@ -22,7 +22,6 @@ class CompanyFixtures extends AbstractFixture
 
     private function createCompany(int $i): Company
     {
-
         $company = new Company(
             $this->faker->company,
             $this->createFromArray(self::COMPANYS_TYPES)

@@ -31,5 +31,4 @@ class PaymentRepository extends ServiceEntityRepository
     {
         return $this->findAll();
     }
-
 }

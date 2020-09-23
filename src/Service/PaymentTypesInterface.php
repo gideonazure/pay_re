@@ -9,5 +9,6 @@ use App\Entity\PaymentTypes;
 interface PaymentTypesInterface
 {
     public function getById(int $id): PaymentTypes;
+
     public function getList(): array;
 }

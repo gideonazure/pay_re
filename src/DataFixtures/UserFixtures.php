@@ -44,5 +44,4 @@ final class UserFixtures extends AbstractFixture
     {
         return $this->encoder->encodePassword($user, $password);
     }
-
 }

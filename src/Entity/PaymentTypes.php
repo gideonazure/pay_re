@@ -159,5 +159,4 @@ class PaymentTypes
     {
         return $this->payments;
     }
-
 }

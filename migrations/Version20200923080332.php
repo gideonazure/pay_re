@@ -12,12 +12,12 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20200923080332 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE payment_supervisor (user_id INT NOT NULL, supervisor_id INT NOT NULL, INDEX IDX_7867132DA76ED395 (user_id), INDEX IDX_7867132D19E9AC5F (supervisor_id), PRIMARY KEY(user_id, supervisor_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -33,7 +33,7 @@ final class Version20200923080332 extends AbstractMigration
         $this->addSql('ALTER TABLE user DROP payment_supervisor_id, DROP reminders_recipients_id');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('DROP TABLE payment_supervisor');

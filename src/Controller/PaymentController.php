@@ -43,6 +43,7 @@ final class PaymentController extends AbstractController
     {
         $payment = $this->paymentInterface->getList();
         $resourse = new Collection($payment, new PaymentTransformer());
+
         return new JsonResponse($this->fractal->createData($resourse));
     }
 }

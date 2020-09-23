@@ -36,7 +36,6 @@ final class RemindersController extends AbstractController
         return new JsonResponse($this->fractal->createData($resourse));
     }
 
-
     /**
      * @Route("/", methods={"GET"})
      */
@@ -44,6 +43,7 @@ final class RemindersController extends AbstractController
     {
         $reminders = $this->remindersInterface->getList();
         $resourse = new Collection($reminders, new RemindersTransformer());
+
         return new JsonResponse($this->fractal->createData($resourse));
     }
 }

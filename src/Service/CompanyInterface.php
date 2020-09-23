@@ -9,5 +9,6 @@ use App\Entity\Company;
 interface CompanyInterface
 {
     public function getById(int $id): Company;
+
     public function getList(): array;
 }

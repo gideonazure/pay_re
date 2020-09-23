@@ -43,6 +43,7 @@ final class CompanyController extends AbstractController
     {
         $company = $this->companyInterface->getList();
         $resourse = new Collection($company, new CompanyTransformer());
+
         return new JsonResponse($this->fractal->createData($resourse));
     }
 }

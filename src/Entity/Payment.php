@@ -423,5 +423,4 @@ class Payment
 
         return $this;
     }
-
 }

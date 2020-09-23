@@ -72,6 +72,4 @@ class Attachments
 
         return $this;
     }
-
-
 }

@@ -36,7 +36,6 @@ final class PaymentTypesController extends AbstractController
         return new JsonResponse($this->fractal->createData($resourse));
     }
 
-
     /**
      * @Route("/{id}", methods={"GET"})
      */
@@ -47,5 +46,4 @@ final class PaymentTypesController extends AbstractController
 
         return new JsonResponse($this->fractal->createData($resourse));
     }
-
 }

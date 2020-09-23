@@ -100,7 +100,6 @@ class User implements UserInterface
      */
     private $reminders_recipients;
 
-
     public function __construct($login, $password, $name, $surname)
     {
         $this->login = $login;
@@ -434,5 +433,4 @@ class User implements UserInterface
 
         return $this;
     }
-
 }

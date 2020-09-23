@@ -26,12 +26,6 @@ abstract class AbstractFixture extends Fixture
 
     /**
      * AbstractFixture constructor.
-     * @param UserPasswordEncoderInterface $encoder
-     * @param PaymentTypesInterface $paymentTypes
-     * @param RemindersInterface $reminders
-     * @param CompanyInterface $company
-     * @param AttachmentsInterface $attachments
-     * @param UserInterface $user
      */
     public function __construct(
         UserPasswordEncoderInterface $encoder,
@@ -62,6 +56,4 @@ abstract class AbstractFixture extends Fixture
     {
         return $code.$this->faker->randomNumber(9);
     }
-
-
 }
