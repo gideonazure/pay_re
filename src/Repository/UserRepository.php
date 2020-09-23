@@ -36,19 +36,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    /**
-     * @param int $id
-     * @return User
-     */
     public function getById(int $id): User
     {
         return $this->findOneBy(['id' => $id]);
     }
 
-    /**
-     * @param string $login
-     * @return User
-     */
     public function getByLogin(string $login): User
     {
         return $this->findOneBy(['login' => $login]);
@@ -61,4 +53,5 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         return $this->findAll();
     }
+
 }

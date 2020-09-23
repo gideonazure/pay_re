@@ -49,9 +49,11 @@ class PaymentTypes
      */
     private $updatedAt;
 
-    public function __construct()
+    public function __construct($abbr)
     {
+        $this->abbr = $abbr;
         $this->payments = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -148,6 +150,14 @@ class PaymentTypes
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Payment[]
+     */
+    public function getPayments(): Collection
+    {
+        return $this->payments;
     }
 
 }

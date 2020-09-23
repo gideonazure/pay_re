@@ -36,7 +36,6 @@ class User implements UserInterface
      */
     private $password;
 
-
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -53,7 +52,7 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $phone;
 
@@ -78,7 +77,9 @@ class User implements UserInterface
     private $payment_responsible;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="supervisor")
+     * @var Collection|Payment[]
+     *
+     * @ORM\ManyToMany(targetEntity="Payment", mappedBy="supervisor")
      */
     private $payment_supervisor;
 
@@ -93,15 +94,25 @@ class User implements UserInterface
     private $payment_updated;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Reminders::class, inversedBy="recipients")
+     * @var Collection|Reminders[]
+     *
+     * @ORM\ManyToMany(targetEntity="Reminders", mappedBy="recipients")
      */
     private $reminders_recipients;
 
-    public function __construct()
+
+    public function __construct($login, $password, $name, $surname)
     {
+        $this->login = $login;
+        $this->password = $password;
+        $this->name = $name;
+        $this->surname = $surname;
+        $this->active = 0;
         $this->payment_responsible = new ArrayCollection();
         $this->payment_created = new ArrayCollection();
         $this->payment_updated = new ArrayCollection();
+        $this->payment_supervisor = new ArrayCollection();
+        $this->reminders_recipients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,18 +191,12 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+        $this->password;
     }
 
     public function getName(): ?string
     {
         return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getSurname(): ?string
@@ -218,12 +223,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPhone(): ?int
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    public function setPhone(?int $phone): self
+    public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
 
@@ -382,4 +387,52 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function addPaymentSupervisor(Payment $paymentSupervisor): self
+    {
+        if (!$this->payment_supervisor->contains($paymentSupervisor)) {
+            $this->payment_supervisor[] = $paymentSupervisor;
+            $paymentSupervisor->addSupervisor($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentSupervisor(Payment $paymentSupervisor): self
+    {
+        if ($this->payment_supervisor->contains($paymentSupervisor)) {
+            $this->payment_supervisor->removeElement($paymentSupervisor);
+            $paymentSupervisor->removeSupervisor($this);
+        }
+
+        return $this;
+    }
+
+    public function addRemindersRecipient(Reminders $remindersRecipient): self
+    {
+        if (!$this->reminders_recipients->contains($remindersRecipient)) {
+            $this->reminders_recipients[] = $remindersRecipient;
+            $remindersRecipient->addRecipient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRemindersRecipient(Reminders $remindersRecipient): self
+    {
+        if ($this->reminders_recipients->contains($remindersRecipient)) {
+            $this->reminders_recipients->removeElement($remindersRecipient);
+            $remindersRecipient->removeRecipient($this);
+        }
+
+        return $this;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
 }

@@ -80,7 +80,18 @@ class Payment
     private $responsible;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="payment_supervisor")
+     * @var Collection|User[]
+     *
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="payment_supervisor")
+     * @ORM\JoinTable(
+     *  name="payment_supervisor",
+     *  joinColumns={
+     *      @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *  },
+     *  inverseJoinColumns={
+     *      @ORM\JoinColumn(name="supervisor_id", referencedColumnName="id")
+     *  }
+     * )
      */
     private $supervisor;
 
@@ -114,8 +125,10 @@ class Payment
      */
     private $updatedBy;
 
-    public function __construct()
+    public function __construct($name)
     {
+        $this->name = $name;
+        $this->createdAt = new \DateTimeImmutable();
         $this->supervisor = new ArrayCollection();
         $this->reminders = new ArrayCollection();
         $this->attachments = new ArrayCollection();

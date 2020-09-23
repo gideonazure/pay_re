@@ -50,7 +50,18 @@ class Reminders
     private $payments;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="reminders_recipients")
+     * @var Collection|User[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="reminders_recipients")
+     * @ORM\JoinTable(
+     *  name="reminders_recipient",
+     *  joinColumns={
+     *      @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *  },
+     *  inverseJoinColumns={
+     *      @ORM\JoinColumn(name="recipient_id", referencedColumnName="id")
+     *  }
+     * )
      */
     private $recipients;
 

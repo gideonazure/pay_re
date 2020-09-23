@@ -25,7 +25,7 @@ class Company
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255)
      */
     private $type;
 
@@ -35,7 +35,7 @@ class Company
     private $cperson;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=255 ,nullable=true)
      */
     private $phone;
 
@@ -71,7 +71,7 @@ class Company
     private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $updatedAt;
 
@@ -80,8 +80,11 @@ class Company
      */
     private $active;
 
-    public function __construct()
+    public function __construct($name, $type)
     {
+        $this->name = $name;
+        $this->type = $type;
+        $this->createdAt = new \DateTimeImmutable();
         $this->payment_payer = new ArrayCollection();
         $this->payment_recipient = new ArrayCollection();
     }
@@ -127,12 +130,12 @@ class Company
         return $this;
     }
 
-    public function getPhone(): ?int
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    public function setPhone(?int $phone): self
+    public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
 

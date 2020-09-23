@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/paymentTypes")
+ * @Route("/payment_types")
  */
 final class PaymentTypesController extends AbstractController
 {
@@ -26,6 +26,18 @@ final class PaymentTypesController extends AbstractController
     }
 
     /**
+     * @Route("/", methods={"GET"})
+     */
+    public function list(): JsonResponse
+    {
+        $paymentTypes = $this->paymentTypesInterface->getList();
+        $resourse = new Collection($paymentTypes, new PaymentTypesTransformer());
+
+        return new JsonResponse($this->fractal->createData($resourse));
+    }
+
+
+    /**
      * @Route("/{id}", methods={"GET"})
      */
     public function getById(int $id): JsonResponse
@@ -36,14 +48,4 @@ final class PaymentTypesController extends AbstractController
         return new JsonResponse($this->fractal->createData($resourse));
     }
 
-    /**
-     * @Route("/", methods={"GET"})
-     */
-    public function list(): JsonResponse
-    {
-        $paymentTypes = $this->paymentTypesInterface->getList();
-        $resourse = new Collection($paymentTypes, new PaymentTypesTransformer());
-
-        return new JsonResponse($this->fractal->createData($resourse));
-    }
 }
