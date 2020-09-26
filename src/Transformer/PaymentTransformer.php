@@ -12,7 +12,7 @@ final class PaymentTransformer extends TransformerAbstract
         return [
             'name' => $payment->getName(),
             'description' => $payment->getDescription(),
-            'type' => $payment->getType(),
+            'type' => $payment->getType()->getAbbr(),
             'payer' => $payment->getPayer(),
             'recipient' => $payment->getRecipient(),
             'expected_date' => $payment->getExpectedDate(),

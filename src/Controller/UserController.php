@@ -3,28 +3,34 @@
 namespace App\Controller;
 
 use App\DTO\CreateUser;
+use App\DTO\UpdateUser;
 use App\Service\UserInterface;
+use App\Service\ValidationService as ValidationService;
+use App\Service\ResponseService as ResponseService;
 use App\Transformer\UserTransformer;
-use League\Fractal\Resource\Collection;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 
 /**
  * @Route("/user")
  */
-final class UserController extends BaseController
+final class UserController extends AbstractController
 {
     private UserInterface $userInterface;
-    protected ValidatorInterface $validator;
+    private ValidationService $validationService;
+    private ResponseService $responseService;
 
     public function __construct(
         UserInterface $userInterface,
-        ValidatorInterface $validator
+        ValidationService $validationService,
+        ResponseService $responseService
     ) {
-        parent::__construct($validator);
         $this->userInterface = $userInterface;
+        $this->validationService = $validationService;
+        $this->responseService = $responseService;
     }
 
     /**
@@ -33,9 +39,9 @@ final class UserController extends BaseController
     public function list(): JsonResponse
     {
         $user = $this->userInterface->getList();
-        $resourse = new Collection($user, new UserTransformer());
+        $responseData = $this->responseService->getCollectionResponseData($user, new UserTransformer());
 
-        return new JsonResponse($this->fractal->createData($resourse));
+        return new JsonResponse($responseData, JsonResponse::HTTP_OK);
     }
 
     /**
@@ -45,15 +51,16 @@ final class UserController extends BaseController
     {
         $user = json_decode($request->getContent(), true);
         $dto = CreateUser::fromRequest($user);
-        $errors = $this->validateDto($dto);
+        $errors = $this->validationService->validateDto($dto);
 
         if (count($errors) > 0) {
             return new JsonResponse($errors, JsonResponse::HTTP_BAD_REQUEST);
         }
 
         $user = $this->userInterface->create($dto);
+        $responseData = $this->responseService->getItemResponseData($user, new UserTransformer());
 
-        return $this->getJsonResponse($user, new UserTransformer(), JsonResponse::HTTP_OK);
+        return new JsonResponse($responseData, JsonResponse::HTTP_OK);
     }
 
     /**
@@ -63,7 +70,32 @@ final class UserController extends BaseController
     {
         $this->userInterface->delete($id);
 
-        return $this->getEmptyJsonResponse(JsonResponse::HTTP_NO_CONTENT);
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @Route("/{id}/update", methods={"POST"})
+     */
+    public function update(int $id, Request $request): JsonResponse
+    {
+        $user = json_decode($request->getContent(), true);
+        $dto = UpdateUser::fromRequest($user);
+        $errors = $this->validationService->validateDto($dto);
+
+        if (count($errors) > 0) {
+            return new JsonResponse($errors, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            $user = $this->userInterface->update($id, $dto);
+            $responseData = $this->responseService->getItemResponseData($user, new UserTransformer());
+
+            return new JsonResponse($responseData, JsonResponse::HTTP_OK);
+        } catch (\Exception $e) {
+            $errors = $this->validationService->getExceptionErrorInfo($e);
+
+            return new JsonResponse($errors, JsonResponse::HTTP_BAD_REQUEST);
+        }
     }
 
     /**
@@ -72,7 +104,9 @@ final class UserController extends BaseController
     public function getById(int $id): JsonResponse
     {
         $user = $this->userInterface->getById($id);
+        $responseData = $this->responseService->getItemResponseData($user, new UserTransformer());
 
-        return $this->getJsonResponse($user, new UserTransformer());
+        return new JsonResponse($responseData, JsonResponse::HTTP_OK);
     }
+
 }

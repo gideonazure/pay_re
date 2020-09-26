@@ -100,10 +100,9 @@ class User implements UserInterface
      */
     private $reminders_recipients;
 
-    public function __construct($login, $password, $name, $surname)
+    public function __construct($login, $name, $surname)
     {
         $this->login = $login;
-        $this->password = $password;
         $this->name = $name;
         $this->surname = $surname;
         $this->active = 0;
@@ -153,7 +152,7 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles(array $roles = ['ROLE_USER']): self
     {
         $this->roles = $roles;
 

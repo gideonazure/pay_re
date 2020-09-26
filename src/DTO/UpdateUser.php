@@ -4,23 +4,17 @@ declare(strict_types=1);
 
 namespace App\DTO;
 
+use App\Entity\User;
 use Assert\Assertion;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
-final class CreateUser
+final class UpdateUser
 {
     /**
      * @Assert\NotBlank()
      * @Assert\Length(max="255")
      */
     private string $login;
-
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max="255")
-     */
-    private string $password;
 
     /**
      * @Assert\NotBlank()
@@ -36,17 +30,14 @@ final class CreateUser
 
     public static function fromRequest(array $request): self
     {
-        Assertion::keyExists($request, 'login');
-        Assertion::keyExists($request, 'name');
-        Assertion::keyExists($request, 'surname');
-        Assertion::keyExists($request, 'password');
-
+//        Assertion::keyExists($request, 'login');
+//        Assertion::keyExists($request, 'name');
+//        Assertion::keyExists($request, 'surname');
 
         $self = new self();
         $self->login = $request['login'];
         $self->name = $request['name'];
         $self->surname = $request['surname'];
-        $self->password = $request['password'];
 
         return $self;
     }
@@ -59,14 +50,6 @@ final class CreateUser
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
     }
 
     public function getSurname(): string

@@ -38,7 +38,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function getById(int $id): User
     {
-        return $this->findOneBy(['id' => $id]);
+        $user = $this->findOneBy(['id' => $id]);
+
+        if (null === $user) {
+            throw new \Exception('This user no longer exists');
+        }
+
+        return $user;
     }
 
     public function getByLogin(string $login): User
@@ -51,6 +57,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function getList(): array
     {
-        return $this->findAll();
+        $list = $this->findAll();
+
+        if (\count($list) < 1) {
+            throw new \Exception('Sorry, the user list is empty');
+        }
+
+        return $list;
     }
 }

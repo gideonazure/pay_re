@@ -75,6 +75,21 @@ class Payment
     private $status;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $repeatable;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $repeatable_id;
+
+    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="payment_responsible")
      */
     private $responsible;
@@ -420,6 +435,42 @@ class Payment
     public function setUpdatedBy(?User $updatedBy): self
     {
         $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    public function getActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function getRepeatable(): ?bool
+    {
+        return $this->repeatable;
+    }
+
+    public function setRepeatable(bool $repeatable): self
+    {
+        $this->repeatable = $repeatable;
+
+        return $this;
+    }
+
+    public function getRepeatableId(): ?int
+    {
+        return $this->repeatable_id;
+    }
+
+    public function setRepeatableId(int $repeatable_id): self
+    {
+        $this->repeatable_id = $repeatable_id;
 
         return $this;
     }

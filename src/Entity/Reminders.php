@@ -40,11 +40,6 @@ class Reminders
     private $date;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $repeatable;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="reminders")
      */
     private $payments;
@@ -119,18 +114,6 @@ class Reminders
     public function setDate(int $date): self
     {
         $this->date = $date;
-
-        return $this;
-    }
-
-    public function getRepeatable(): ?bool
-    {
-        return $this->repeatable;
-    }
-
-    public function setRepeatable(bool $repeatable): self
-    {
-        $this->repeatable = $repeatable;
 
         return $this;
     }

@@ -14,14 +14,21 @@ class PaymentFixtures extends AbstractFixture implements DependentFixtureInterfa
 {
     protected const PAYMENT_COUNT = 45;
 
+    public function getDependencies()
+    {
+        return [
+            PaymentTypesFixtures::class,
+        ];
+    }
+
     public function load(ObjectManager $manager)
     {
         for ($i = 1; $i <= self::PAYMENT_COUNT; ++$i) {
             $payment = $this->createPayment();
-//            $manager->persist($payment);
+            $manager->persist($payment);
         }
 
-//        $manager->flush();
+        $manager->flush();
     }
 
     private function createPayment(): Payment
@@ -31,10 +38,9 @@ class PaymentFixtures extends AbstractFixture implements DependentFixtureInterfa
 //        $paymentTypesList = $this->paymentTypes->getList();
 //        dd($paymentTypesList);
 
-        dd($this->getReference(PaymentTypes::class));
 
-        $paymentTypesResource = new Collection($paymentTypesList, new PaymentTypesTransformer());
-        $paymentTypes = $this->fractal->createData($paymentTypesResource)->toArray();
+//        $paymentTypesResource = new Collection($paymentTypesList, new PaymentTypesTransformer());
+//        $paymentTypes = $this->fractal->createData($paymentTypesResource)->toArray();
 
         $payment = new Payment($this->faker->text(15));
 
@@ -46,13 +52,7 @@ class PaymentFixtures extends AbstractFixture implements DependentFixtureInterfa
             ->setExpectedDate($this->faker->date('U'))
             ->setActualDate($this->faker->date('U'))
             ->setStatus($this->faker->boolean(85))
-            ->setType($paymentTypes[$this->faker->numberBetween(0, count($paymentTypes))]);
+            ->setType($this->getReference(PaymentTypesFixtures::PAYMENT_REFERENCE));
     }
 
-    public function getDependencies()
-    {
-        return [
-            PaymentTypesFixtures::class,
-        ];
-    }
 }

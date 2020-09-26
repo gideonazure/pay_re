@@ -27,21 +27,19 @@ final class UserFixtures extends AbstractFixture
     private function createUser(int $i): User
     {
         $user = new User(
+            'user'.$i++,
             $this->faker->firstName(),
             $this->faker->firstName()
         );
 
-        return $user->setLogin('user'.$i++)
-            ->setPassword($this->createPassword($user, 'userPass'))
+        $pass = $this->encoder->encodePassword($user, 'userPass');
+
+        return $user
+            ->setPassword($pass)
             ->setRoles(['ROLE_USER'])
             ->setEmail($this->faker->email)
             ->setPhone($this->createPhone('+380'))
             ->setPosition($this->createFromArray(self::USERS_POSITION))
             ->setActive($this->faker->boolean(60));
-    }
-
-    private function createPassword(User $user, string $password): string
-    {
-        return $this->encoder->encodePassword($user, $password);
     }
 }
