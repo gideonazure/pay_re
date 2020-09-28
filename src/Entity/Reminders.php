@@ -60,8 +60,10 @@ class Reminders
      */
     private $recipients;
 
-    public function __construct()
+    public function __construct($description, $date)
     {
+        $this->description = $description;
+        $this->date = $date;
         $this->recipients = new ArrayCollection();
     }
 

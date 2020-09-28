@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
+use App\DTO\PaymentDTO;
 use App\Service\PaymentInterface;
+use App\Service\ValidationService as ValidationService;
+use App\Service\ResponseService as ResponseService;
 use App\Transformer\PaymentTransformer;
-use League\Fractal\Manager;
-use League\Fractal\Resource\Collection;
-use League\Fractal\Resource\Item;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -17,24 +18,19 @@ use Symfony\Component\Routing\Annotation\Route;
 final class PaymentController extends AbstractController
 {
     private PaymentInterface $paymentInterface;
-    private Manager $fractal;
+    private ValidationService $validationService;
+    private ResponseService $responseService;
 
-    public function __construct(PaymentInterface $paymentInterface)
-    {
+    public function __construct(
+        PaymentInterface $paymentInterface,
+        ValidationService $validationService,
+        ResponseService $responseService
+    ) {
         $this->paymentInterface = $paymentInterface;
-        $this->fractal = new Manager();
+        $this->validationService = $validationService;
+        $this->responseService = $responseService;
     }
 
-    /**
-     * @Route("/{id}", methods={"GET"})
-     */
-    public function getById(int $id): JsonResponse
-    {
-        $payment = $this->paymentInterface->getById($id);
-        $resourse = new Item($payment, new PaymentTransformer());
-
-        return new JsonResponse($this->fractal->createData($resourse));
-    }
 
     /**
      * @Route("/", methods={"GET"})
@@ -42,8 +38,44 @@ final class PaymentController extends AbstractController
     public function list(): JsonResponse
     {
         $payment = $this->paymentInterface->getList();
-        $resourse = new Collection($payment, new PaymentTransformer());
+        $responseData = $this->responseService->getCollectionResponseData($payment, new PaymentTransformer());
 
-        return new JsonResponse($this->fractal->createData($resourse));
+        return new JsonResponse($responseData, JsonResponse::HTTP_OK);
     }
+
+    /**
+     * @Route("/create", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function create(Request $request): JsonResponse
+    {
+        $payment = json_decode($request->getContent(), true);
+        $dto = PaymentDTO::fromRequest($payment);
+        $errors = $this->validationService->validateDto($dto);
+
+        if (count($errors) > 0) {
+            return new JsonResponse($errors, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $payment = $this->paymentInterface->create($dto);
+        $responseData = $this->responseService->getItemResponseData($payment, new PaymentTransformer());
+
+        return new JsonResponse($responseData, JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @Route("/{id}", methods={"GET"})
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getById(int $id): JsonResponse
+    {
+        $payment = $this->paymentInterface->getById($id);
+        $responseData = $this->responseService->getItemResponseData($payment, new PaymentTransformer());
+
+        return new JsonResponse($responseData, JsonResponse::HTTP_OK);
+
+    }
+
 }

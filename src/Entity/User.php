@@ -105,7 +105,7 @@ class User implements UserInterface
         $this->login = $login;
         $this->name = $name;
         $this->surname = $surname;
-        $this->active = 0;
+        $this->active = 1;
         $this->payment_responsible = new ArrayCollection();
         $this->payment_created = new ArrayCollection();
         $this->payment_updated = new ArrayCollection();

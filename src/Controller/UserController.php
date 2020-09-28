@@ -2,8 +2,7 @@
 
 namespace App\Controller;
 
-use App\DTO\CreateUser;
-use App\DTO\UpdateUser;
+use App\DTO\UserDTO;
 use App\Service\UserInterface;
 use App\Service\ValidationService as ValidationService;
 use App\Service\ResponseService as ResponseService;
@@ -46,11 +45,13 @@ final class UserController extends AbstractController
 
     /**
      * @Route("/create", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
      */
     public function create(Request $request): JsonResponse
     {
         $user = json_decode($request->getContent(), true);
-        $dto = CreateUser::fromRequest($user);
+        $dto = UserDTO::fromRequest($user);
         $errors = $this->validationService->validateDto($dto);
 
         if (count($errors) > 0) {
@@ -65,6 +66,8 @@ final class UserController extends AbstractController
 
     /**
      * @Route("/{id}/delete", methods={"POST"})
+     * @param int $id
+     * @return JsonResponse
      */
     public function delete(int $id): JsonResponse
     {
@@ -75,11 +78,14 @@ final class UserController extends AbstractController
 
     /**
      * @Route("/{id}/update", methods={"POST"})
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse
      */
     public function update(int $id, Request $request): JsonResponse
     {
         $user = json_decode($request->getContent(), true);
-        $dto = UpdateUser::fromRequest($user);
+        $dto = UserDTO::fromRequest($user);
         $errors = $this->validationService->validateDto($dto);
 
         if (count($errors) > 0) {
@@ -100,6 +106,8 @@ final class UserController extends AbstractController
 
     /**
      * @Route("/{id}", methods={"GET"})
+     * @param int $id
+     * @return JsonResponse
      */
     public function getById(int $id): JsonResponse
     {

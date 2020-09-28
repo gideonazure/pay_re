@@ -2,8 +2,7 @@
 
 namespace App\Service;
 
-use App\DTO\CreateUser;
-use App\DTO\UpdateUser;
+use App\DTO\UserDTO;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,7 +34,7 @@ final class UserService implements UserInterface
         return $this->userRepository->getList();
     }
 
-    public function create(CreateUser $dto): User
+    public function create(UserDTO $dto): User
     {
         $user = new User(
             $dto->getLogin(),
@@ -45,7 +44,12 @@ final class UserService implements UserInterface
 
         $user
             ->setPassword($this->encoder->encodePassword($user, $dto->getPassword()))
-            ->setRoles();
+            ->setRoles($dto->getRoles())
+            ->setPhone($dto->getPhone())
+            ->setEmail($dto->getEmail())
+            ->setTelegram($dto->getTelegram())
+            ->setPosition($dto->getPosition())
+            ->setActive($dto->getActive());
 
         $this->em->persist($user);
         $this->em->flush();
@@ -61,7 +65,7 @@ final class UserService implements UserInterface
         $this->em->flush();
     }
 
-    public function update(int $id, UpdateUser $dto): User
+    public function update(int $id, UserDTO $dto): User
     {
         $user = $this->getById($id);
 
@@ -69,9 +73,17 @@ final class UserService implements UserInterface
             throw new \Exception('This user no longer exists');
         }
 
-        $user->setLogin($dto->getLogin());
-        $user->setName($dto->getName());
-        $user->setSurname($dto->getSurname());
+        $user
+            ->setLogin($dto->getLogin())
+            ->setPassword($this->encoder->encodePassword($user, $dto->getPassword()))
+            ->setRoles($dto->getRoles())
+            ->setName($dto->getName())
+            ->setSurname($dto->getSurname())
+            ->setPhone($dto->getPhone())
+            ->setEmail($dto->getEmail())
+            ->setTelegram($dto->getTelegram())
+            ->setPosition($dto->getPosition())
+            ->setActive($dto->getActive());
 
         $this->em->flush();
 

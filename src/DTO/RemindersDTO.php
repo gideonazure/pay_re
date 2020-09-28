@@ -8,7 +8,7 @@ use Assert\Assertion;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-final class CreateUser
+final class RemindersDTO
 {
     /**
      * @Assert\NotBlank()

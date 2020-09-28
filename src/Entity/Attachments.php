@@ -32,6 +32,17 @@ class Attachments
      */
     private $payment_attachment;
 
+    /**
+     * Attachments constructor.
+     * @param $name
+     * @param $path
+     */
+    public function __construct($name, $path)
+    {
+        $this->name = $name;
+        $this->path = $path;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -47,27 +47,27 @@ class Payment
     /**
      * @ORM\Column(type="integer")
      */
-    private $amount_uah;
+    private $amountUah;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $amount_eur;
+    private $amountEur;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $amount_usd;
+    private $amountUsd;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $expected_date;
+    private $expectedDate;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $actual_date;
+    private $actualDate;
 
     /**
      * @ORM\Column(type="integer")
@@ -87,7 +87,7 @@ class Payment
     /**
      * @ORM\Column(type="integer")
      */
-    private $repeatable_id;
+    private $repeatableId;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="payment_responsible")
@@ -180,60 +180,60 @@ class Payment
 
     public function getAmountUah(): ?int
     {
-        return $this->amount_uah;
+        return $this->amountUah;
     }
 
-    public function setAmountUah(int $amount_uah): self
+    public function setAmountUah(int $amountUah): self
     {
-        $this->amount_uah = $amount_uah;
+        $this->amountUah = $amountUah;
 
         return $this;
     }
 
     public function getAmountEur(): ?int
     {
-        return $this->amount_eur;
+        return $this->amountEur;
     }
 
-    public function setAmountEur(?int $amount_eur): self
+    public function setAmountEur(?int $amountEur): self
     {
-        $this->amount_eur = $amount_eur;
+        $this->amountEur = $amountEur;
 
         return $this;
     }
 
     public function getAmountUsd(): ?int
     {
-        return $this->amount_usd;
+        return $this->amountUsd;
     }
 
-    public function setAmountUsd(?int $amount_usd): self
+    public function setAmountUsd(?int $amountUsd): self
     {
-        $this->amount_usd = $amount_usd;
+        $this->amountUsd = $amountUsd;
 
         return $this;
     }
 
     public function getExpectedDate(): ?int
     {
-        return $this->expected_date;
+        return $this->expectedDate;
     }
 
-    public function setExpectedDate(int $expected_date): self
+    public function setExpectedDate(int $expectedDate): self
     {
-        $this->expected_date = $expected_date;
+        $this->expectedDate = $expectedDate;
 
         return $this;
     }
 
     public function getActualDate(): ?int
     {
-        return $this->actual_date;
+        return $this->actualDate;
     }
 
-    public function setActualDate(int $actual_date): self
+    public function setActualDate(int $actualDate): self
     {
-        $this->actual_date = $actual_date;
+        $this->actualDate = $actualDate;
 
         return $this;
     }
@@ -465,12 +465,12 @@ class Payment
 
     public function getRepeatableId(): ?int
     {
-        return $this->repeatable_id;
+        return $this->repeatableId;
     }
 
-    public function setRepeatableId(int $repeatable_id): self
+    public function setRepeatableId(int $repeatableId): self
     {
-        $this->repeatable_id = $repeatable_id;
+        $this->repeatableId = $repeatableId;
 
         return $this;
     }
